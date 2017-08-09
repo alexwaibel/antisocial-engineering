@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import twitter, configparser, time
+import twitter, configparser, time, sys
 
 config = configparser.ConfigParser()
 config.read('settings.cfg')
@@ -37,11 +37,17 @@ def main():
     if twitterEnabled:
         twitterApi = authenticateTwitter(config)
         print('Authenticated for Twitter user ' + twitterApi.VerifyCredentials().screen_name),
-
+        lastStatusId = sys.maxsize
         statusSet = twitterApi.GetUserTimeline(exclude_replies=True,
                                             count=200,
                                             include_rts=True)
-        deleteOldTweets(statusSet, int(config['Twitter']['days']), twitterApi)
+        while len(statusSet) > 0:
+            lastStatusId = statusSet[len(statusSet) - 1].id
+            deleteOldTweets(statusSet, int(config['Twitter']['days']), twitterApi)
+            statusSet = twitterApi.GetUserTimeline(exclude_replies=True,
+                                                   count=200,
+                                                   include_rts=True,
+                                                   max_id=lastStatusId - 1)
 
 if __name__ == "__main__":
     main()
