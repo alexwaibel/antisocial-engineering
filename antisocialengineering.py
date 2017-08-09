@@ -1,11 +1,16 @@
 #!/usr/bin/python3
 
-import twitter, configparser, time, sys
+import configparser
+import sys
+import time
+import twitter
 
 config = configparser.ConfigParser()
 config.read('settings.cfg')
 
 # Takes configparser as argument and connects API to account
+
+
 def authenticateTwitter(config):
     consumerKey = str(config['Twitter']['consumer key'])
     consumerSecret = str(config['Twitter']['consumer secret'])
@@ -18,8 +23,10 @@ def authenticateTwitter(config):
                              access_token_secret=accessTokenSecret)
     return twitterApi
 
-# Takes a sequence of statuses and a number of days as the arguments. Deletes 
+# Takes a sequence of statuses and a number of days as the arguments. Deletes
 # every status that is older than the supplied number of days
+
+
 def deleteOldTweets(statusSet, days, api):
     currentTime = int(time.time())
     SECONDS_IN_DAY = 86400
@@ -30,27 +37,30 @@ def deleteOldTweets(statusSet, days, api):
             api.DestroyStatus(status.id)
     return
 
+
 def main():
     twitterEnabled = config['Twitter'].getboolean('enabled')
 
     if twitterEnabled:
         twitterApi = authenticateTwitter(config)
-        print('Authenticated for Twitter user ' + twitterApi.VerifyCredentials().screen_name),
+        print('Authenticated for Twitter user ' +
+              twitterApi.VerifyCredentials().screen_name),
 
         print('Deleting Twitter posts.'),
         lastStatusId = sys.maxsize
         statusSet = twitterApi.GetUserTimeline(exclude_replies=False,
-                                            include_rts=True)
+                                               include_rts=True)
         while len(statusSet) > 0:
             lastStatusId = statusSet[len(statusSet) - 1].id
-            deleteOldTweets(statusSet, int(config['Twitter']['days']), twitterApi)
+            deleteOldTweets(statusSet, int(
+                config['Twitter']['days']), twitterApi)
             statusSet = twitterApi.GetUserTimeline(exclude_replies=False,
                                                    include_rts=True,
                                                    max_id=lastStatusId - 1)
 
-        print('All posts older than ' + str(config['Twitter']['days']) + 
+        print('All posts older than ' + str(config['Twitter']['days']) +
               ' days have been deleted.'),
+
 
 if __name__ == "__main__":
     main()
-
