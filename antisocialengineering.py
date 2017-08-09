@@ -7,7 +7,7 @@ config.read('settings.cfg')
 
 twitterEnabled = config['Twitter'].getboolean('enabled')
 
-if twitterEnabled:
+def authenticateTwitter(config):
     consumerKey = str(config['Twitter']['consumer key'])
     consumerSecret = str(config['Twitter']['consumer secret'])
     accessToken = str(config['Twitter']['access token'])
@@ -17,5 +17,8 @@ if twitterEnabled:
                              consumer_secret=consumerSecret,
                              access_token_key=accessToken,
                              access_token_secret=accessTokenSecret)
-    
+    return twitterApi
+
+if twitterEnabled:
+    twitterApi = authenticateTwitter(config)
     print('Authenticated for Twitter user ' + twitterApi.VerifyCredentials().screen_name)
