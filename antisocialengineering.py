@@ -27,8 +27,7 @@ def deleteOldTweets(statusSet, days, api):
     for status in statusSet:
         postTime = status.created_at_in_seconds
         if postTime < currentTime - daysAsSeconds:
-            # twitterApi.DestroyStatus(status.id)
-            print(status.text),
+            api.DestroyStatus(status.id)
     return
 
 def main():
@@ -37,17 +36,20 @@ def main():
     if twitterEnabled:
         twitterApi = authenticateTwitter(config)
         print('Authenticated for Twitter user ' + twitterApi.VerifyCredentials().screen_name),
+
+        print('Deleting Twitter posts.'),
         lastStatusId = sys.maxsize
-        statusSet = twitterApi.GetUserTimeline(exclude_replies=True,
-                                            count=200,
+        statusSet = twitterApi.GetUserTimeline(exclude_replies=False,
                                             include_rts=True)
         while len(statusSet) > 0:
             lastStatusId = statusSet[len(statusSet) - 1].id
             deleteOldTweets(statusSet, int(config['Twitter']['days']), twitterApi)
-            statusSet = twitterApi.GetUserTimeline(exclude_replies=True,
-                                                   count=200,
+            statusSet = twitterApi.GetUserTimeline(exclude_replies=False,
                                                    include_rts=True,
                                                    max_id=lastStatusId - 1)
+
+        print('All posts older than ' + str(config['Twitter']['days']) + 
+              ' days have been deleted.'),
 
 if __name__ == "__main__":
     main()
