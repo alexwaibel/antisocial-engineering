@@ -6,8 +6,10 @@ Antisocial Engineering is a utility to delete social media posts regularly acros
 ## Dependencies
 * python-twitter
 
-## Planned support
+## Currently working
 * Twitter
+
+## Planned support
 * Reddit
 * Instagram
 
