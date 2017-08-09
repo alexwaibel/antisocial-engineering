@@ -6,3 +6,5 @@ consumer key =
 consumer secret =
 access token =
 access token secret =
+# Days Twitter posts should be kept before being deleted                       
+days = 30
