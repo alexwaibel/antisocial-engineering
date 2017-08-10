@@ -1,3 +1,8 @@
+[General]
+# Comma separated list of words. If word is found in post, that post won't 
+# be deleted.
+exclude key words =
+
 [Twitter]
 # Set whether or not the program should delete Twitter posts
 enabled = yes  

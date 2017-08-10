@@ -27,13 +27,13 @@ def authenticateTwitter(config):
 # every status that is older than the supplied number of days
 
 
-def deleteOldTweets(statusSet, days, api):
+def deleteOldTweets(statusSet, days, api, exclusionList=[]):
     currentTime = int(time.time())
     SECONDS_IN_DAY = 86400
     daysAsSeconds = days * SECONDS_IN_DAY
     for status in statusSet:
         postTime = status.created_at_in_seconds
-        if postTime < currentTime - daysAsSeconds:
+        if postTime < currentTime - daysAsSeconds and status.text.lower() not in exclusionList:
             api.DestroyStatus(status.id)
     return
 
@@ -46,6 +46,9 @@ def main():
         print('Authenticated for Twitter user ' +
               twitterApi.VerifyCredentials().screen_name),
 
+        excludeWords = config['General']['exclude key words'].split(",")
+        [item.lower() for item in excludeWords]
+
         print('Deleting Twitter posts.'),
         lastStatusId = sys.maxsize
         statusSet = twitterApi.GetUserTimeline(exclude_replies=False,
@@ -53,7 +56,7 @@ def main():
         while len(statusSet) > 0:
             lastStatusId = statusSet[len(statusSet) - 1].id
             deleteOldTweets(statusSet, int(
-                config['Twitter']['days']), twitterApi)
+                config['Twitter']['days']), twitterApi, excludeWords)
             statusSet = twitterApi.GetUserTimeline(exclude_replies=False,
                                                    include_rts=True,
                                                    max_id=lastStatusId - 1)
