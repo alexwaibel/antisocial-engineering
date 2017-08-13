@@ -6,10 +6,19 @@ exclude key words =
 [Twitter]
 # Set whether or not the program should delete Twitter posts
 enabled = yes  
-# Get these next items from https://apps.twitter.com
+# Get these next four items from https://apps.twitter.com
 consumer key =
 consumer secret =
 access token =
 access token secret =
 # Days Twitter posts should be kept before being deleted                       
 days = 30
+
+[Reddit]
+# Set whether or not the program should delete Reddit posts
+enabled = yes
+# Get these next four items from https://www.reddit.com/prefs/apps/
+client id = 
+client secret = 
+username = 
+password = 
