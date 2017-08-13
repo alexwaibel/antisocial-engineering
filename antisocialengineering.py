@@ -61,14 +61,14 @@ def main():
 
     if twitter_enabled:
         twitter_api = authenticate_twitter(CONFIG)
-        print('Authenticated for Twitter user ' +
-              twitter_api.VerifyCredentials().screen_name),
+        print(('Authenticated for Twitter user ' +
+               twitter_api.VerifyCredentials().screen_name),)
 
         exclude_words = CONFIG['General']['exclude key words'].split(",")
         for item in exclude_words:
             item.lower()
 
-        print('Deleting Twitter posts.'),
+        print(('Deleting Twitter posts.'),)
         last_status_id = sys.maxsize
         status_set = twitter_api.GetUserTimeline(exclude_replies=False,
                                                  include_rts=True)
@@ -80,8 +80,8 @@ def main():
                                                      include_rts=True,
                                                      max_id=last_status_id - 1)
 
-        print('All posts older than ' + str(CONFIG['Twitter']['days']) +
-              ' days have been deleted.'),
+        print(('All posts older than ' + str(CONFIG['Twitter']['days']) +
+               ' days have been deleted.'),)
 
 
 if __name__ == "__main__":
